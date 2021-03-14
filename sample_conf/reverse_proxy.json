@@ -1,0 +1,19 @@
+{
+  "port": 8080,
+  "routes": [
+    {
+      "path": "/jokes",
+      "method": "*",
+      "steps": [
+        {
+          "step": "send",
+          "endpoint": "https://api.chucknorris.io${message.path}",
+          "ignoreSSL": false
+        },
+        {
+          "step": "reply"
+        }
+      ]
+    }
+  ]
+}

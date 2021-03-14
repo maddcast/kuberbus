@@ -1,0 +1,29 @@
+{
+  "port": 8080,
+  "routes": [
+    {
+      "path": "/jokes",
+      "method": "*",
+      "steps": [
+        {
+          "step": "save_request",
+          "rootDir": "./target/logs",
+          "format": "CURL",
+          "curlEndpoint": "https://api.chucknorris.io${message.path}"
+        },
+        {
+          "step": "send",
+          "endpoint": "https://api.chucknorris.io${message.path}",
+          "ignoreSSL": false
+        },
+        {
+          "step": "save_response",
+          "rootDir": "./target/logs"
+        },
+        {
+          "step": "reply"
+        }
+      ]
+    }
+  ]
+}

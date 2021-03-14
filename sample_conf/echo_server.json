@@ -1,0 +1,14 @@
+{
+  "port": 8080,
+  "routes": [
+    {
+      "path": "/",
+      "method": "*",
+      "steps": [
+        {
+          "step": "reply"
+        }
+      ]
+    }
+  ]
+}

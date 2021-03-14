@@ -1,0 +1,17 @@
+{
+  "port": 8080,
+  "routes": [
+    {
+      "path": "/",
+      "method": "*",
+      "steps": [
+        {
+          "step": "custom_reply",
+          "status": 200,
+          "contentType": "text/html",
+          "body": "<h1>example</h1>"
+        }
+      ]
+    }
+  ]
+}
