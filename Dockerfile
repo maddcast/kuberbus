@@ -14,11 +14,11 @@ RUN mvn package
 
 FROM openjdk:11.0.7-slim-buster
 
+USER spring:spring
+
 WORKDIR /app
 
 COPY --from=MAVEN_TOOL_CHAIN /build/target/dependency-jars ./dependency-jars
-COPY --from=MAVEN_TOOL_CHAIN /build/target/servicebus-1.0.jar .
+COPY --from=MAVEN_TOOL_CHAIN /build/target/kuberbus*.jar ./kuberbus.jar
 
-EXPOSE 8080
-
-CMD java -jar servicebus-1.0.jar
+CMD java -jar kuberbus.jar
