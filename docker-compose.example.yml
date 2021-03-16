@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  reverse-proxy:
+    build: .
+#    command:
+#    environment:
+#      - API_CONF
+    ports:
+      - 8080:8080

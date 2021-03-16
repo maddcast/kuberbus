@@ -14,8 +14,6 @@ RUN mvn package
 
 FROM openjdk:11.0.7-slim-buster
 
-USER spring:spring
-
 WORKDIR /app
 
 COPY --from=MAVEN_TOOL_CHAIN /build/target/dependency-jars ./dependency-jars
