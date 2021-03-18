@@ -1,6 +1,7 @@
 package com.antilogics.servicebus.core.commands;
 
 import com.antilogics.servicebus.config.steps.SaveRequestStepConfig;
+import com.antilogics.servicebus.core.CommandResult;
 import com.antilogics.servicebus.core.HttpMessage;
 import com.antilogics.servicebus.core.HttpResponder;
 import com.antilogics.servicebus.util.FileUtils;
@@ -22,7 +23,7 @@ public class SaveRequestCommand extends Command<SaveRequestStepConfig> {
 
     @Override
     @SneakyThrows
-    public HttpMessage process(int pipeId, HttpMessage httpMessage, HttpResponder responder) {
+    public CommandResult process(int pipeId, HttpMessage httpMessage, HttpResponder responder) {
         String dir = FileUtils.getSaveDir(stepConfig.getRootDir(), httpMessage);
         log.info("RN: {}. Saving request to dir {}", pipeId, dir);
         String filePrefix = String.format("%1$tH-%1$tM-%1$tS_%2$04d", Calendar.getInstance(), pipeId);
@@ -36,7 +37,7 @@ public class SaveRequestCommand extends Command<SaveRequestStepConfig> {
                 break;
         }
 
-        return httpMessage;
+        return CommandResult.success();
     }
 
 

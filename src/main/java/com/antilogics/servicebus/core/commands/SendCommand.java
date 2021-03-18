@@ -1,6 +1,7 @@
 package com.antilogics.servicebus.core.commands;
 
 import com.antilogics.servicebus.config.steps.SendStepConfig;
+import com.antilogics.servicebus.core.CommandResult;
 import com.antilogics.servicebus.core.HttpMessage;
 import com.antilogics.servicebus.core.HttpResponder;
 import com.antilogics.servicebus.util.HttpUtils;
@@ -23,7 +24,7 @@ public class SendCommand extends Command<SendStepConfig> {
 
     @Override
     @SneakyThrows
-    public HttpMessage process(int pipeId, HttpMessage httpMessage, HttpResponder responder) {
+    public CommandResult process(int pipeId, HttpMessage httpMessage, HttpResponder responder) {
         var url = new URL(stepConfig.getEndpoint().evalString(httpMessage));
         log.info("RN: {}. Sending request to {}", pipeId, url);
         RequestBody requestBody = null;
@@ -43,12 +44,14 @@ public class SendCommand extends Command<SendStepConfig> {
         var response = client.newCall(request).execute();
         var responseHeaders = new HashMap<String, String>();
         response.headers().forEach(pair -> responseHeaders.put(pair.getFirst(), pair.getSecond()));
-        return new HttpMessage(
-                response.code(),
-                httpMessage.getPath(),
-                httpMessage.getMethod(),
-                responseHeaders,
-                Objects.requireNonNull(response.body()).bytes()
+        return CommandResult.successAndReplaceMessage(
+                new HttpMessage(
+                        response.code(),
+                        httpMessage.getPath(),
+                        httpMessage.getMethod(),
+                        responseHeaders,
+                        Objects.requireNonNull(response.body()).bytes()
+                )
         );
     }
 }

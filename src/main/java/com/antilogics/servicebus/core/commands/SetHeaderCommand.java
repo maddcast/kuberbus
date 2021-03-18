@@ -1,6 +1,7 @@
 package com.antilogics.servicebus.core.commands;
 
 import com.antilogics.servicebus.config.steps.SetHeaderStepConfig;
+import com.antilogics.servicebus.core.CommandResult;
 import com.antilogics.servicebus.core.HttpMessage;
 import com.antilogics.servicebus.core.HttpResponder;
 import com.antilogics.servicebus.util.HttpUtils;
@@ -14,11 +15,11 @@ public class SetHeaderCommand extends Command<SetHeaderStepConfig> {
 
 
     @Override
-    public HttpMessage process(int pipeId, HttpMessage httpMessage, HttpResponder responder) {
+    public CommandResult process(int pipeId, HttpMessage httpMessage, HttpResponder responder) {
         log.info("RN: {}. Setting header {}", pipeId, stepConfig.getName());
         var headers = HttpUtils.replaceHeader(httpMessage.getHeaders(),
                 stepConfig.getName(),
                 stepConfig.getValue());
-        return httpMessage.withHeaders(headers);
+        return CommandResult.successAndReplaceMessage(httpMessage.withHeaders(headers));
     }
 }

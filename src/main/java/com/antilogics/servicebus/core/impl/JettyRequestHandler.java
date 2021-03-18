@@ -6,12 +6,14 @@ import com.antilogics.servicebus.config.steps.AbstractStepConfig;
 import com.antilogics.servicebus.util.JettyUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 public class JettyRequestHandler extends AbstractHandler {
     private final ApiConfig apiConfig;
     private final AtomicInteger pipeId = new AtomicInteger(0);
@@ -31,7 +33,15 @@ public class JettyRequestHandler extends AbstractHandler {
                 int currentPipeId = pipeId.incrementAndGet();
                 for (AbstractStepConfig stepConfig : routeConfig.getSteps()) {
                     var command = stepConfig.toCommand();
-                    httpMessage = command.process(currentPipeId, httpMessage, responder);
+                    var commandResult = command.process(currentPipeId, httpMessage, responder);
+                    if (commandResult.isContinuePipeline()) {
+                        if (commandResult.getResultMessage() != null) {
+                            httpMessage = commandResult.getResultMessage();
+                        }
+                    }
+                    else {
+                        break;
+                    }
                 }
                 jettyRequest.setHandled(true);
                 return;

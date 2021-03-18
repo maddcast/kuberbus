@@ -1,15 +1,15 @@
 package com.antilogics.servicebus.config.steps;
 
 import com.antilogics.servicebus.core.commands.Command;
-import com.antilogics.servicebus.core.commands.RespondCommand;
+import com.antilogics.servicebus.core.commands.ReplyCommand;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RespondStepConfig extends AbstractStepConfig {
+public class ReplyStepConfig extends AbstractStepConfig {
     @Override
     public Command<? extends AbstractStepConfig> toCommand() {
-        return new RespondCommand(this);
+        return new ReplyCommand(this);
     }
 }
