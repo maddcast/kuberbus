@@ -2,13 +2,11 @@ package com.antilogics.servicebus;
 
 import com.antilogics.servicebus.config.ApiConfig;
 import com.antilogics.servicebus.core.impl.JettyRequestHandler;
-import com.antilogics.servicebus.core.impl.JettyServlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +30,6 @@ public class ServiceBus {
         connector.setPort(apiConfig.getPort());
         server.addConnector(connector);
 
-//        var servletHandler = new ServletContextHandler();
-//        servletHandler.addServlet(new JettyServlet())
         server.setHandler(new JettyRequestHandler(apiConfig));
         server.start();
     }
