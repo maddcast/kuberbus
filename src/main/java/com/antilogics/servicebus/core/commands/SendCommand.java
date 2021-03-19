@@ -3,7 +3,7 @@ package com.antilogics.servicebus.core.commands;
 import com.antilogics.servicebus.config.steps.SendStepConfig;
 import com.antilogics.servicebus.core.CommandResult;
 import com.antilogics.servicebus.core.HttpMessage;
-import com.antilogics.servicebus.core.HttpResponder;
+import com.antilogics.servicebus.core.ServerContext;
 import com.antilogics.servicebus.util.HttpUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class SendCommand extends Command<SendStepConfig> {
 
     @Override
     @SneakyThrows
-    public CommandResult process(int pipeId, HttpMessage httpMessage, HttpResponder responder) {
+    public CommandResult process(int pipeId, HttpMessage httpMessage, ServerContext serverContext) {
         var url = new URL(stepConfig.getEndpoint().evalString(httpMessage));
         log.info("RN: {}. Sending request to {}", pipeId, url);
         RequestBody requestBody = null;

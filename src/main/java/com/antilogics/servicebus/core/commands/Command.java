@@ -3,7 +3,7 @@ package com.antilogics.servicebus.core.commands;
 import com.antilogics.servicebus.config.steps.AbstractStepConfig;
 import com.antilogics.servicebus.core.CommandResult;
 import com.antilogics.servicebus.core.HttpMessage;
-import com.antilogics.servicebus.core.HttpResponder;
+import com.antilogics.servicebus.core.ServerContext;
 
 public abstract class Command<C extends AbstractStepConfig> {
     protected C stepConfig;
@@ -14,5 +14,5 @@ public abstract class Command<C extends AbstractStepConfig> {
     }
 
 
-    public abstract CommandResult process(int pipeId, HttpMessage httpMessage, HttpResponder responder);
+    public abstract CommandResult process(int pipeId, HttpMessage httpMessage, ServerContext serverContext);
 }

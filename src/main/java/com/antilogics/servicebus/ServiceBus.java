@@ -1,11 +1,14 @@
 package com.antilogics.servicebus;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.antilogics.servicebus.config.ApiConfig;
 import com.antilogics.servicebus.core.impl.JettyRequestHandler;
+import com.antilogics.servicebus.core.impl.JettyServlet;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +16,8 @@ import java.io.IOException;
 @Slf4j
 public class ServiceBus {
     public static void main(String[] args) throws Exception {
+        setupSentry();
+
         var apiConfig = loadConf(args);
 
         if (apiConfig == null) {
@@ -27,8 +32,20 @@ public class ServiceBus {
         connector.setPort(apiConfig.getPort());
         server.addConnector(connector);
 
+//        var servletHandler = new ServletContextHandler();
+//        servletHandler.addServlet(new JettyServlet())
         server.setHandler(new JettyRequestHandler(apiConfig));
         server.start();
+    }
+
+
+    private static void setupSentry() {
+        boolean sentryEnabled = Boolean.parseBoolean(System.getenv().getOrDefault("SENTRY_ENABLED", "false"));
+        if (sentryEnabled) {
+            String sentryDsn = System.getenv("SENTRY_DSN");
+            Sentry.init(options -> options.setDsn(sentryDsn));
+            log.info("Enabled sentry logging");
+        }
     }
 
 

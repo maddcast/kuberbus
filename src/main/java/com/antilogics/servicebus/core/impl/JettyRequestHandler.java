@@ -4,6 +4,7 @@ import com.antilogics.servicebus.config.ApiConfig;
 import com.antilogics.servicebus.config.RouteConfig;
 import com.antilogics.servicebus.config.steps.AbstractStepConfig;
 import com.antilogics.servicebus.util.JettyUtils;
+import io.sentry.Sentry;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,12 @@ public class JettyRequestHandler extends AbstractHandler {
 
     public JettyRequestHandler(ApiConfig apiConfig) {
         this.apiConfig = apiConfig;
+        log.info("Initialize routes");
+        for (RouteConfig routeConfig : apiConfig.getRoutes()) {
+            for (AbstractStepConfig stepConfig : routeConfig.getSteps()) {
+                stepConfig.afterPropertiesSet();
+            }
+        }
     }
 
 
@@ -29,19 +36,25 @@ public class JettyRequestHandler extends AbstractHandler {
         for (RouteConfig routeConfig : apiConfig.getRoutes()) {
             if (routeFits(httpServletRequest, routeConfig)) {
                 var httpMessage = JettyUtils.createMessage(jettyRequest);
-                var responder = new JettyHttpResponder(httpServletResponse);
+                var serverContext = new JettyServerContext(httpServletResponse);
                 int currentPipeId = pipeId.incrementAndGet();
-                for (AbstractStepConfig stepConfig : routeConfig.getSteps()) {
-                    var command = stepConfig.toCommand();
-                    var commandResult = command.process(currentPipeId, httpMessage, responder);
-                    if (commandResult.isContinuePipeline()) {
-                        if (commandResult.getResultMessage() != null) {
-                            httpMessage = commandResult.getResultMessage();
+                try {
+                    for (AbstractStepConfig stepConfig : routeConfig.getSteps()) {
+                        var command = stepConfig.toCommand();
+                        var commandResult = command.process(currentPipeId, httpMessage, serverContext);
+                        if (commandResult.isContinuePipeline()) {
+                            if (commandResult.getResultMessage() != null) {
+                                httpMessage = commandResult.getResultMessage();
+                            }
+                        }
+                        else {
+                            break;
                         }
                     }
-                    else {
-                        break;
-                    }
+                }
+                catch (Exception e) {
+                    Sentry.captureException(e);
+                    throw e;
                 }
                 jettyRequest.setHandled(true);
                 return;

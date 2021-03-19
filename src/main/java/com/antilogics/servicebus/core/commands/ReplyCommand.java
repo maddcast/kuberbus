@@ -3,7 +3,7 @@ package com.antilogics.servicebus.core.commands;
 import com.antilogics.servicebus.config.steps.ReplyStepConfig;
 import com.antilogics.servicebus.core.CommandResult;
 import com.antilogics.servicebus.core.HttpMessage;
-import com.antilogics.servicebus.core.HttpResponder;
+import com.antilogics.servicebus.core.ServerContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,10 +16,10 @@ public class ReplyCommand extends Command<ReplyStepConfig> {
 
     @Override
     @SneakyThrows
-    public CommandResult process(int pipeId, HttpMessage httpMessage, HttpResponder responder) {
+    public CommandResult process(int pipeId, HttpMessage httpMessage, ServerContext serverContext) {
         log.info("RN: {}. Sending response", pipeId);
 
-        responder.respond(httpMessage);
+        serverContext.respond(httpMessage);
 
         return CommandResult.success();
     }

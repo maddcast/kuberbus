@@ -3,7 +3,7 @@ package com.antilogics.servicebus.core.commands;
 import com.antilogics.servicebus.config.steps.CustomReplyStepConfig;
 import com.antilogics.servicebus.core.CommandResult;
 import com.antilogics.servicebus.core.HttpMessage;
-import com.antilogics.servicebus.core.HttpResponder;
+import com.antilogics.servicebus.core.ServerContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,7 +18,7 @@ public class CustomReplyCommand extends Command<CustomReplyStepConfig> {
 
     @Override
     @SneakyThrows
-    public CommandResult process(int pipeId, HttpMessage httpMessage, HttpResponder responder) {
+    public CommandResult process(int pipeId, HttpMessage httpMessage, ServerContext serverContext) {
         log.info("RN: {}. Sending custom response", pipeId);
         var headers = new HashMap<String, String>();
         if (stepConfig.getContentType() != null) {
@@ -31,7 +31,7 @@ public class CustomReplyCommand extends Command<CustomReplyStepConfig> {
                 headers,
                 stepConfig.getBody().evalString(httpMessage).getBytes()
         );
-        responder.respond(responseMessage);
+        serverContext.respond(responseMessage);
 
         return CommandResult.success();
     }

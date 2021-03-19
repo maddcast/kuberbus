@@ -1,7 +1,14 @@
 # kuberbus
 Cloud-native lightweight service bus middleware
 
-### Configuration examples
+### Environment settings
+API_CONF - JSON containing bus configuration
+
+SENTRY_ENABLED - Send errors to sentry. When enabled requires SENTRY_DSN parameter. Disabled by default
+
+SENTRY_DSN - DSN URL where to send errors  
+
+### Bus configuration examples
 1. Echo server. Sending all incoming request's content back to client
 
 ```json

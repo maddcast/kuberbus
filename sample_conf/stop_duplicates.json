@@ -14,7 +14,7 @@
         {
           "step": "drop_duplicates",
           "poolName": "all_posts",
-          "secondsToWait": 2
+          "secondsToWait": 4
         },
         {
           "step": "send",

@@ -18,4 +18,5 @@ import com.antilogics.servicebus.core.commands.Command;
 })
 public abstract class AbstractStepConfig {
     public abstract Command<? extends AbstractStepConfig> toCommand();
+    public void afterPropertiesSet() {}
 }
