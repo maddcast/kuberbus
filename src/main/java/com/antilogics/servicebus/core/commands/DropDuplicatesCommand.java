@@ -35,7 +35,7 @@ public class DropDuplicatesCommand extends Command<DropDuplicatesConfig> {
         }
 
         if (checkPipeId != pipeId) {
-            log.error("RN: {}. Drop duplicate request", pipeId);
+            log.warn("RN: {}. Drop duplicate request in favor of RN {}", pipeId, checkPipeId);
             return CommandResult.halt();
         }
 
