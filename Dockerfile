@@ -14,7 +14,7 @@ RUN mvn package
 
 FROM openjdk:11.0.7-slim-buster
 
-RUN apt update && apt install -y curl
+RUN apt update && apt install -y curl vim
 
 WORKDIR /app
 
