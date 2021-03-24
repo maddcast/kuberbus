@@ -1,12 +1,14 @@
 package com.antilogics.servicebus;
 
 import com.antilogics.servicebus.config.ApiConfig;
-import com.antilogics.servicebus.core.impl.JettyRequestHandler;
+import com.antilogics.servicebus.core.impl.JettyAsyncServlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +31,12 @@ public class ServiceBus {
         ServerConnector connector = new ServerConnector(server);
         connector.setPort(apiConfig.getPort());
         server.addConnector(connector);
-
-        server.setHandler(new JettyRequestHandler(apiConfig));
+        var contextHandler = new ServletContextHandler();
+        contextHandler.setContextPath("/");
+        ServletHolder asyncHolder = new ServletHolder(new JettyAsyncServlet(apiConfig));
+        asyncHolder.setAsyncSupported(true);
+        contextHandler.addServlet(asyncHolder, "/*");
+        server.setHandler(contextHandler);
         server.start();
     }
 

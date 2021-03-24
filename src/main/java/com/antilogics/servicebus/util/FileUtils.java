@@ -16,6 +16,6 @@ public class FileUtils {
         if (Files.notExists(dirPath)) {
             Files.createDirectories(dirPath);
         }
-        return dirPath.toFile().getAbsolutePath();
+        return dirPath.normalize().toFile().getAbsolutePath();
     }
 }
