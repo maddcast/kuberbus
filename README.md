@@ -108,3 +108,35 @@ Example of usage: start service bus then open http://localhost:8080/jokes/random
   ]
 }
 ```
+
+5. Blocking duplicates
+
+```json
+{
+  "port": 8080,
+  "routes": [
+    {
+      "path": "/json",
+      "method": "POST",
+      "steps": [
+        {
+          "step": "custom_reply",
+          "status": 200,
+          "contentType": "application/json",
+          "body": "{\"success\": true}"
+        },
+        {
+          "step": "drop_duplicates",
+          "poolName": "all_posts",
+          "secondsToWait": 4
+        },
+        {
+          "step": "send",
+          "endpoint": "https://6evmv.mocklab.io${message.path}",
+          "ignoreSSL": false
+        }
+      ]
+    }
+  ]
+}
+```
