@@ -127,7 +127,6 @@ Example of usage: start service bus then open http://localhost:8080/jokes/random
         },
         {
           "step": "drop_duplicates",
-          "poolName": "all_posts",
           "secondsToWait": 4
         },
         {

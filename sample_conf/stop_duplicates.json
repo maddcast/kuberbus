@@ -13,7 +13,6 @@
         },
         {
           "step": "drop_duplicates",
-          "poolName": "all_posts",
           "secondsToWait": 4
         },
         {

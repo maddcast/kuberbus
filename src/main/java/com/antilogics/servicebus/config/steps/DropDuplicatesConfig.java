@@ -17,7 +17,6 @@ import java.time.Duration;
 public class DropDuplicatesConfig extends AbstractStepConfig {
     // TODO: move cache away from config to ServerContext
     private Cache<RequestCacheKey, Integer> requestCache = null;
-    private String poolName;
     private int secondsToWait;
 
 
