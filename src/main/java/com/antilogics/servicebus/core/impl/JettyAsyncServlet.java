@@ -6,7 +6,6 @@ import com.antilogics.servicebus.config.steps.AbstractStepConfig;
 import com.antilogics.servicebus.util.JettyUtils;
 import io.sentry.Sentry;
 import jakarta.servlet.AsyncContext;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,18 +69,6 @@ public class JettyAsyncServlet extends HttpServlet {
                         return;
                     }
                 }
-
-                response.setStatus(200);
-                response.setContentType("text/plain");
-                response.getOutputStream().write("ololo".getBytes());
-                System.err.println("In AsyncContext / Start / Runnable / run");
-                asyncContext.complete();
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.err.println("In AsyncContext / done");
             }
         });
     }
